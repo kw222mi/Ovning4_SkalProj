@@ -63,22 +63,75 @@ namespace SkalProj_Datastrukturer_Minne
         static void ExamineList()
         {
             /*
-             * Loop this method untill the user inputs something to exit to main menue.
-             * Create a switch statement with cases '+' and '-'
-             * '+': Add the rest of the input to the list (The user could write +Adam and "Adam" would be added to the list)
-             * '-': Remove the rest of the input from the list (The user could write -Adam and "Adam" would be removed from the list)
-             * In both cases, look at the count and capacity of the list
-             * As a default case, tell them to use only + or -
-             * Below you can see some inspirational code to begin working.
-            */
+        När en List<T> blir full ökar den automatiskt sin kapacitet.
+        Detta görs genom att den interna arrayen *dubblas* i storlek, vilket ger plats för fler element
+        utan att programmeraren behöver ange storleken i förväg.
 
-            //List<string> theList = new List<string>();
-            //string input = Console.ReadLine();
-            //char nav = input[0];
-            //string value = input.substring(1);
+        När man tar bort element ur listan minskar däremot inte kapaciteten. Den interna arrayen behåller
+        sin storlek även om listan blir nästan tom. Detta är avsiktligt, eftersom en dynamiskt krympande 
+        kapacitet skulle påverka prestandan negativt.
 
-            //switch(nav){...}
+        Den stora fördelen med List<T> är just flexibiliteten: den kan växa när det behövs, och passar bra
+        när man inte vet hur många element som kommer att lagras.
+
+        En array har alltid en fast längd och kan inte utökas. Om man däremot vet exakt hur många element 
+        som behövs — till exempel maximalt 26 bokstäver — är en array ofta mer effektiv. En array använder 
+        oftast mindre minne och kan ge något snabbare åtkomst, eftersom ingen dynamisk omallokering sker.
+    */
+
+
+            List<string> theList = new List<string>();
+
+                while (true)
+                {
+                    Console.WriteLine("\nSkriv +namn för att lägga till, -namn för att ta bort, eller 0 för att gå tillbaka.");
+                    Console.Write("Input: ");
+                    string input = Console.ReadLine();
+
+                    if (string.IsNullOrWhiteSpace(input))
+                    {
+                        Console.WriteLine("Du måste skriva något!");
+                        continue;
+                    }
+
+                    // Avsluta om användaren skriver 0
+                    if (input == "0")
+                        break;
+
+                    char command = input[0];               // + eller -
+                    string value = input.Substring(1);      // resten av texten
+
+                    switch (command)
+                    {
+                        case '+':
+                            theList.Add(value);
+                            Console.WriteLine($"{value} lades till i listan.");
+                            break;
+
+                        case '-':
+                            if (theList.Remove(value))
+                                Console.WriteLine($"{value} togs bort ur listan.");
+                            else
+                                Console.WriteLine($"{value} fanns inte i listan.");
+                            break;
+
+                        default:
+                            Console.WriteLine("Använd + eller - följt av ett namn.");
+                            break;
+                    }
+
+                    // Visa listans nuvarande Count och Capacity
+                    Console.WriteLine($"Count: {theList.Count}");
+                    Console.WriteLine($"Capacity: {theList.Capacity}");
+
+                    // Skriv även ut listans innehåll
+                    Console.WriteLine("Innehåll: " + string.Join(", ", theList));
+                }
+            
+
+
         }
+
 
         /// <summary>
         /// Examines the datastructure Queue
