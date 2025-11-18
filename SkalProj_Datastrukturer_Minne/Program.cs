@@ -206,12 +206,65 @@ namespace SkalProj_Datastrukturer_Minne
         /// </summary>
         static void ExamineStack()
         {
-            /*
-             * Loop this method until the user inputs something to exit to main menue.
-             * Create a switch with cases to push or pop items
-             * Make sure to look at the stack after pushing and and poping to see how it behaves
-            */
+            Stack<string> stack = new Stack<string>();
+
+            while (true)
+            {
+                Console.WriteLine("\nAnvänd P <värde> för Push (lägga överst),");
+                Console.WriteLine("O för Pop (ta bort översta), eller 0 för att gå tillbaka.");
+                Console.Write("Input: ");
+
+                string input = Console.ReadLine();
+
+                if (string.IsNullOrWhiteSpace(input))
+                {
+                    Console.WriteLine("Du måste skriva något!");
+                    continue;
+                }
+
+                // Avsluta
+                if (input == "0")
+                    break;
+
+                char command = input[0];
+                string value = input.Length > 1 ? input.Substring(1).Trim() : "";
+
+                switch (command)
+                {
+                    case 'P':  // Push
+                        if (string.IsNullOrWhiteSpace(value))
+                        {
+                            Console.WriteLine("Du måste ange ett värde efter P.");
+                            break;
+                        }
+
+                        stack.Push(value);
+                        Console.WriteLine($"{value} lades överst i stacken.");
+                        break;
+
+                    case 'O':  // Pop
+                        if (stack.Count > 0)
+                        {
+                            string removed = stack.Pop();
+                            Console.WriteLine($"{removed} togs bort från toppen av stacken.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Stacken är tom — inget att ta bort.");
+                        }
+                        break;
+
+                    default:
+                        Console.WriteLine("Använd P <värde> eller O.");
+                        break;
+                }
+
+                // Visa stackens innehåll
+                Console.WriteLine("Nuvarande stack (överst först): " +
+                    (stack.Count > 0 ? string.Join(", ", stack) : "(tom)"));
+            }
         }
+
 
         static void CheckParanthesis()
         {
