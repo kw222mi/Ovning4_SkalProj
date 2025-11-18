@@ -138,11 +138,67 @@ namespace SkalProj_Datastrukturer_Minne
         /// </summary>
         static void ExamineQueue()
         {
-            /*
-             * Loop this method untill the user inputs something to exit to main menue.
-             * Create a switch with cases to enqueue items or dequeue items
-             * Make sure to look at the queue after Enqueueing and Dequeueing to see how it behaves
-            */
+            
+
+                Queue<string> queue = new Queue<string>();
+
+                while (true)
+                {
+                    Console.WriteLine("\nAnvänd E <namn> för att enqueue (ställa sig i kön),");
+                    Console.WriteLine("D för att dequeue (nästa kund lämnar kön), eller 0 för att gå tillbaka.");
+                    Console.Write("Input: ");
+
+                    string input = Console.ReadLine();
+
+                    if (string.IsNullOrWhiteSpace(input))
+                    {
+                        Console.WriteLine("Du måste skriva något!");
+                        continue;
+                    }
+
+                    // Avsluta och gå tillbaka till huvudmenyn
+                    if (input == "0")
+                        break;
+
+                    char command = input[0];                   // E eller D
+                    string value = input.Length > 1 ? input.Substring(1).Trim() : "";
+
+                    switch (command)
+                    {
+                        case 'E':   // Enqueue (lägg till i kön)
+                            if (string.IsNullOrWhiteSpace(value))
+                            {
+                                Console.WriteLine("Du måste ange ett namn efter E.");
+                                break;
+                            }
+
+                            queue.Enqueue(value);
+                            Console.WriteLine($"{value} ställde sig i kön.");
+                            break;
+
+                        case 'D':   // Dequeue (ta bort första i kön)
+                            if (queue.Count > 0)
+                            {
+                                string removed = queue.Dequeue();
+                                Console.WriteLine($"{removed} lämnade kön.");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Kön är tom — ingen kan lämna.");
+                            }
+                            break;
+
+                        default:
+                            Console.WriteLine("Använd E <namn> eller D.");
+                            break;
+                    }
+
+                    // Visa nuvarande innehåll i kön
+                    Console.WriteLine("Nuvarande kö: " +
+                        (queue.Count > 0 ? string.Join(", ", queue) : "(tom)"));
+                }
+            
+
         }
 
         /// <summary>
