@@ -57,29 +57,26 @@ namespace SkalProj_Datastrukturer_Minne
             }
         }
 
-        /// <summary>
-        /// Examines the datastructure List
-        /// </summary>
+        /*
+   När en List<T> blir full ökar den automatiskt sin kapacitet.
+   Detta görs genom att den interna arrayen *dubblas* i storlek, vilket ger plats för fler element
+   utan att programmeraren behöver ange storleken i förväg.
+
+   När man tar bort element ur listan minskar däremot inte kapaciteten. Den interna arrayen behåller
+   sin storlek även om listan blir nästan tom. Detta är avsiktligt, eftersom en dynamiskt krympande 
+   kapacitet skulle påverka prestandan negativt.
+
+   Den stora fördelen med List<T> är just flexibiliteten: den kan växa när det behövs, och passar bra
+   när man inte vet hur många element som kommer att lagras.
+
+   En array har alltid en fast längd och kan inte utökas. Om man däremot vet exakt hur många element 
+   som behövs — till exempel maximalt 26 bokstäver — är en array ofta mer effektiv. En array använder 
+   oftast mindre minne och kan ge något snabbare åtkomst, eftersom ingen dynamisk omallokering sker.
+*/
+
         static void ExamineList()
         {
-            /*
-        När en List<T> blir full ökar den automatiskt sin kapacitet.
-        Detta görs genom att den interna arrayen *dubblas* i storlek, vilket ger plats för fler element
-        utan att programmeraren behöver ange storleken i förväg.
-
-        När man tar bort element ur listan minskar däremot inte kapaciteten. Den interna arrayen behåller
-        sin storlek även om listan blir nästan tom. Detta är avsiktligt, eftersom en dynamiskt krympande 
-        kapacitet skulle påverka prestandan negativt.
-
-        Den stora fördelen med List<T> är just flexibiliteten: den kan växa när det behövs, och passar bra
-        när man inte vet hur många element som kommer att lagras.
-
-        En array har alltid en fast längd och kan inte utökas. Om man däremot vet exakt hur många element 
-        som behövs — till exempel maximalt 26 bokstäver — är en array ofta mer effektiv. En array använder 
-        oftast mindre minne och kan ge något snabbare åtkomst, eftersom ingen dynamisk omallokering sker.
-    */
-
-
+      
             List<string> theList = new List<string>();
 
                 while (true)
@@ -133,9 +130,15 @@ namespace SkalProj_Datastrukturer_Minne
         }
 
 
-        /// <summary>
-        /// Examines the datastructure Queue
-        /// </summary>
+        /*
+     Demonstrerar hur en Queue fungerar (FIFO – First In, First Out).
+     E <namn> lägger till en person sist i kön (Enqueue).
+     D tar bort personen som står först (Dequeue).
+
+     En kö används när ordningen ska bevaras och den som kom först
+     också ska betjänas först – t.ex. en ICA-kö.
+ */
+
         static void ExamineQueue()
         {
             
@@ -201,9 +204,15 @@ namespace SkalProj_Datastrukturer_Minne
 
         }
 
-        /// <summary>
-        /// Examines the datastructure Stack
-        /// </summary>
+        /*
+      Demonstrerar hur en Stack fungerar (LIFO – Last In, First Out).
+      P <värde> lägger till ett element överst (Push).
+      O tar bort det senast tillagda elementet (Pop).
+
+      En stack passar när det som lades in sist ska hanteras först,
+      som tex ångra-funktioner eller parentesmatchning – men inte köer.
+  */
+
         static void ExamineStack()
         {
             Stack<string> stack = new Stack<string>();
@@ -214,7 +223,7 @@ namespace SkalProj_Datastrukturer_Minne
                 Console.WriteLine("O för Pop (ta bort översta), eller 0 för att gå tillbaka.");
                 Console.Write("Input: ");
 
-                string input = Console.ReadLine();
+                string input = Console.ReadLine()!;
 
                 if (string.IsNullOrWhiteSpace(input))
                 {
@@ -265,16 +274,81 @@ namespace SkalProj_Datastrukturer_Minne
             }
         }
 
+        /*
+    Kontrollerar om en sträng har korrekt placerade parenteser.
+
+    En stack används eftersom den följer LIFO (Last In, First Out), vilket passar
+    perfekt för parenteser: den senaste öppnade parentesen måste alltid stängas först.
+
+    Algoritm:
+    - Lägg öppnande parenteser på stacken.
+    - Vid stängande parentes:
+         * Om stacken är tom → fel.
+         * Poppa och kontrollera att parenteserna matchar.
+    - Efteråt:
+         * Tom stack → korrekt.
+         * Ej tom stack → några parenteser saknar stängning.
+
+    Exempel korrekt: (), {[]}, [({})]
+    Exempel fel: (], {[)}, (()
+*/
 
         static void CheckParanthesis()
         {
-            /*
-             * Use this method to check if the paranthesis in a string is Correct or incorrect.
-             * Example of correct: (()), {}, [({})],  List<int> list = new List<int>() { 1, 2, 3, 4 };
-             * Example of incorrect: (()]), [), {[()}],  List<int> list = new List<int>() { 1, 2, 3, 4 );
-             */
+            
+                Console.WriteLine("\nSkriv en sträng med parenteser att kontrollera:");
+                string input = Console.ReadLine()!;
 
-        }
+                if (string.IsNullOrWhiteSpace(input))
+                {
+                    Console.WriteLine("Du måste skriva något!");
+                    return;
+                }
+
+                Stack<char> stack = new Stack<char>();
+
+                foreach (char c in input)
+                {
+                    // Om öppnande parentes → lägg på stacken
+                    if (c == '(' || c == '{' || c == '[')
+                    {
+                        stack.Push(c);
+                    }
+                    // Om stängande parentes → kolla om den matchar senaste öppnade
+                    else if (c == ')' || c == '}' || c == ']')
+                    {
+                        if (stack.Count == 0)
+                        {
+                            Console.WriteLine("Fel: Det finns en stängande parentes utan motsvarighet.");
+                            return;
+                        }
+
+                        char last = stack.Pop();
+
+                        if (!IsMatchingPair(last, c))
+                        {
+                            Console.WriteLine($"Fel: {last} matchar inte {c}");
+                            return;
+                        }
+                    }
+                }
+
+                // Om stacken inte är tom → det finns öppningar utan stängningar
+                if (stack.Count == 0)
+                    Console.WriteLine("Korrekt: Alla parenteser är välformade!");
+                else
+                    Console.WriteLine("Fel: Några parenteser stängdes aldrig.");
+            }
+
+            static bool IsMatchingPair(char open, char close)
+            {
+                return (open == '(' && close == ')') ||
+                       (open == '{' && close == '}') ||
+                       (open == '[' && close == ']');
+            }
+
+
+        
 
     }
 }
